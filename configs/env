@@ -1,0 +1,13 @@
+APP_ADDR=0.0.0.0
+APP_PORT=3000
+APP_AUTH_SECRET=secret
+
+POSTGRES_DSN=postgres://postgres:12345@localhost:5432/postgres?sslmode=disable
+
+INFLUXDB_ADDR=http://localhost
+INFLUXDB_PORT=8086
+INFLUXDB_USERNAME=admin
+INFLUXDB_PASSWORD=S3cretPass
+INFLUXDB_ORG=uptime
+INFLUXDB_BUCKET=uptime
+INFLUXDB_ADMIN_TOKEN=token
