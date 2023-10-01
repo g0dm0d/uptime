@@ -20,7 +20,6 @@ func (p Protocol) IsValid() bool {
 type Monitor struct {
 	ID       int
 	Hostname string
-	UserID   int
 	Interval int
 	Protocol Protocol
 	Addr     string

@@ -2,6 +2,7 @@ package socket
 
 import (
 	"context"
+	"log"
 
 	"github.com/g0dm0d/uptime/internal/server/req"
 	"nhooyr.io/websocket"
@@ -34,6 +35,7 @@ func (s *Socket) Emit(message string) {
 	for _, client := range s.clients {
 		err := client.Write(context.TODO(), websocket.MessageText, []byte(message))
 		if err != nil {
+			log.Println(err)
 			s.remove(client)
 		}
 	}

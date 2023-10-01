@@ -55,8 +55,9 @@ func (s *Server) SetupRouter() {
 
 	s.router.Route("/monitor", func(r chi.Router) {
 		r.Method("POST", "/add", req.NewHandler(s.service.Monitor.Add)) // Make mw.Auth
+		r.Method("GET", "/getall", req.NewHandler(s.service.Monitor.GetAll))
 		r.Method("GET", "/ws", req.NewHandler(s.socket.AddSubscriber))
-		r.Method("GET", "/history/{monitor}", req.NewHandler(s.service.Monitor.GetHistory))
+		r.Method("GET", "/heartbeat/{monitor}", req.NewHandler(s.service.Monitor.GetHistory))
 	})
 
 	s.server.Handler = s.router

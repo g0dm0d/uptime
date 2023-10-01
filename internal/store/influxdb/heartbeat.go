@@ -23,13 +23,15 @@ func NewHeartbeatStore(writeAPI api.WriteAPIBlocking, queryAPI api.QueryAPI) Hea
 	}
 }
 
-func (s *HeartbeatStore) SaveTick(opts store.Heartbeat) error {
+func (s *HeartbeatStore) SaveTick(opts store.Tick) error {
 	result, _ := json.Marshal(opts)
 	fields := map[string]interface{}{
 		"result": result,
 	}
 
-	point := write.NewPoint(fmt.Sprint(opts.MonitorID), map[string]string{}, fields, time.Now())
+	pointname := fmt.Sprint(opts.MonitorID)
+
+	point := write.NewPoint(pointname, map[string]string{}, fields, time.Now())
 	err := s.writeAPI.WritePoint(context.Background(), point)
 	if err != nil {
 		return err
@@ -43,6 +45,7 @@ func (s *HeartbeatStore) GetTickHistory(monitorID, count int) ([]store.Heartbeat
 
 	query := fmt.Sprintf(`from(bucket: "uptime")
 						|> range(start: 0)
+						|> sort(columns: ["_time"], desc: true)
             |> filter(fn: (r) => r["_measurement"] == "%d")
     				|> filter(fn: (r) => r["_field"] == "result")
     				|> limit(n:%d, offset: 0)`, monitorID, count)
@@ -53,9 +56,13 @@ func (s *HeartbeatStore) GetTickHistory(monitorID, count int) ([]store.Heartbeat
 	}
 
 	for results.Next() {
-		var tick store.Heartbeat
+		var tick store.Tick
 		json.Unmarshal([]byte(results.Record().ValueByKey("_value").(string)), &tick)
-		ticks = append(ticks, tick)
+		hearbeat := store.Heartbeat{
+			Date: results.Record().ValueByKey("_time").(time.Time),
+			Tick: tick,
+		}
+		ticks = append(ticks, hearbeat)
 	}
 
 	if err := results.Err(); err != nil {

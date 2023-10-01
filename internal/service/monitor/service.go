@@ -7,6 +7,7 @@ import (
 
 type Monitor interface {
 	Add(ctx *req.Ctx) error
+	GetAll(ctx *req.Ctx) error
 	GetHistory(ctx *req.Ctx) error
 }
 
