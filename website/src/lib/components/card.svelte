@@ -17,16 +17,18 @@
           {:else}
           <p class="text-white">offline</p>
           {/if}
+          <footer class="flex items-center">
+            <p class="text-gray-400 text-sm mt-2">{monitorData.monitor.protocol}://{monitorData.monitor.address}</p>
+            {#if monitorData.monitor.port}
+            <span>
+              <p class="text-gray-400 text-sm mt-2">:{monitorData.monitor.port}</p>
+            </span>
+            {/if}
+          </footer>
       </div>
       <h3 class="text-white">
-        {monitorData.monitor.protocol}://{monitorData.monitor.address}
-        {#if monitorData.monitor.port}
-        <span>
-          :{monitorData.monitor.port}
-        </span>
-        {/if}
+        {monitorData.monitor.hostname}
       </h3>
-
     </div>
   </div>
   <div class="ml-auto">

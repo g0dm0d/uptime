@@ -18,7 +18,7 @@ export const load = ({ params }) => {
     
                 if (result) {
                     let ticks = result;
-                    monitorsMap.set(monitor.id, { monitor: monitor, ticks: ticks });
+                    monitorsMap.set(monitor.id, { monitor: monitor, ticks: ticks.reverse() });
                 }
             }
         }
