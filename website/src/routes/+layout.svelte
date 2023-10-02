@@ -1,9 +1,9 @@
 <script lang="ts">
 	import '../app.postcss';
 	import { AppShell, AppBar, Toast, initializeStores, getToastStore, Modal, Drawer } from '@skeletonlabs/skeleton';
-
 	import { computePosition, autoUpdate, flip, shift, offset, arrow } from '@floating-ui/dom';
 	import { storePopup } from '@skeletonlabs/skeleton';
+
 	storePopup.set({ computePosition, autoUpdate, flip, shift, offset, arrow });
 	initializeStores()
 	export const toastStore = getToastStore();
@@ -21,7 +21,7 @@
 			</svelte:fragment>
 			<svelte:fragment slot="trail">
 				<a
-					class="btn btn-sm variant-ghost-surface"
+					class="btn btn-sm variant-ringed-primary"
 					href="https://github.com/g0dm0d/uptime"
 					target="_blank"
 					rel="noreferrer"

@@ -1,6 +1,7 @@
 package cron
 
 import (
+	"fmt"
 	"log"
 	"time"
 )
@@ -39,42 +40,53 @@ type Schedule struct {
 }
 
 type Cron struct {
-	tasks []*Task
+	tasks map[int]Task
 }
 
 func NewCron() *Cron {
-	return &Cron{}
+	tasks := make(map[int]Task)
+	return &Cron{
+		tasks: tasks,
+	}
 }
 
 func (c *Cron) AddTask(task Task) {
-	c.tasks = append(c.tasks, &task)
+	c.tasks[task.MonitorID] = task
 }
 
 func (c *Cron) Start() {
 	for _, task := range c.tasks {
-		go c.runTask(task)
+		go task.Run()
 	}
 }
 
-func (c *Cron) runTask(task *Task) {
+func (c *Cron) RunByID(id int) error {
+	if task, ok := c.tasks[id]; ok {
+		go task.Run()
+		return nil
+	}
+	return fmt.Errorf("id not found")
+}
+
+func (t Task) Run() {
 	for {
-		nextRun := task.Schedule.getTime()
+		nextRun := t.Schedule.getTime()
 		now := time.Now()
 		duration := nextRun.Sub(now)
 
 		if duration < 0 {
-			nextRun = task.Schedule.getTime()
+			nextRun = t.Schedule.getTime()
 			duration = nextRun.Sub(now)
 		}
 
 		time.Sleep(duration)
 
-		err := task.Action(task.MonitorID)
+		err := t.Action(t.MonitorID)
 		if err != nil {
 			log.Printf("Ping func is failed with error: %s", err)
 		}
 
-		nextRun = task.Schedule.getTime()
+		nextRun = t.Schedule.getTime()
 	}
 }
 

@@ -7,21 +7,22 @@
   let ticks = monitorData.ticks.slice()
 </script>
 
+{#key monitorData}
 <div class="card bg-surface-800 overflow-hidden flex flex-col lg:flex-row p-4 rounded-xl m-5 w-full">
   <div>
     <div class="flex items-center flex-row mt-2">
       <div class="w-16 items-center text-center font-bold text-black h-6 rounded-full mr-2
-                  {ticks[ticks.length-1].success === 1 ? 'bg-green-400' : 'bg-red-400'}">
+                  {ticks[ticks.length-1].success === 1 ? 'bg-success-400' : 'bg-error-400'}">
           {#if ticks[ticks.length-1].success === 1}
-          <p class="text-white">online</p>
+          <p class="text-surface-900">online</p>
           {:else}
-          <p class="text-white">offline</p>
+          <p class="text-surface-900">offline</p>
           {/if}
           <footer class="flex items-center">
-            <p class="text-gray-400 text-sm mt-2">{monitorData.monitor.protocol}://{monitorData.monitor.address}</p>
+            <p class="text-surface-300 text-sm mt-2">{monitorData.monitor.protocol}://{monitorData.monitor.address}</p>
             {#if monitorData.monitor.port}
             <span>
-              <p class="text-gray-400 text-sm mt-2">:{monitorData.monitor.port}</p>
+              <p class="text-surface-300 text-sm mt-2">:{monitorData.monitor.port}</p>
             </span>
             {/if}
           </footer>
@@ -39,7 +40,8 @@
 
     </div>
     <footer class="justify-end flex items-center">
-      <p class="text-gray-400 text-sm mt-2">Last 24 hours</p>
+      <p class="text-surface-300 text-sm mt-2">Last 24 hours</p>
     </footer>
   </div>
 </div>
+{/key}

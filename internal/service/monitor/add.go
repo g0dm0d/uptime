@@ -5,6 +5,7 @@ import (
 
 	"github.com/g0dm0d/uptime/internal/server/req"
 	"github.com/g0dm0d/uptime/internal/store"
+	"github.com/g0dm0d/uptime/model"
 	"github.com/g0dm0d/uptime/pkg/errs"
 )
 
@@ -29,7 +30,22 @@ func (s *Service) Add(ctx *req.Ctx) error {
 		return errs.ReturnError(ctx.Writer, errs.InvalidProtocol)
 	}
 
-	err = s.monitorStore.AddMonitor(store.CreateMonitorOpts{
+	id, err := s.monitorStore.AddMonitor(store.CreateMonitorOpts{
+		Hostname: r.Hostname,
+		Interval: r.Interval,
+		Protocol: string(r.Protocol),
+		Addr:     r.Addr,
+		Port:     r.Port,
+		Tags:     r.Tags,
+	})
+
+	if err != nil {
+		log.Println(err)
+		return errs.ReturnError(ctx.Writer, errs.InternalServerError)
+	}
+
+	err = s.uptime.AddMonitor(&model.Monitor{
+		ID:       id,
 		Hostname: r.Hostname,
 		Interval: r.Interval,
 		Protocol: string(r.Protocol),
@@ -39,9 +55,8 @@ func (s *Service) Add(ctx *req.Ctx) error {
 	})
 	if err != nil {
 		log.Println(err)
-
 		return errs.ReturnError(ctx.Writer, errs.InternalServerError)
 	}
 
-	return nil
+	return ctx.JSON(nil)
 }

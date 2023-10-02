@@ -17,11 +17,13 @@ func NewMonitorStore(db *sql.DB) store.MonitorStore {
 	}
 }
 
-func (s *MonitorStore) AddMonitor(opts store.CreateMonitorOpts) error {
-	_, err := s.db.Exec("CALL add_monitor($1, $2, $3, $4, $5, $6)",
+func (s *MonitorStore) AddMonitor(opts store.CreateMonitorOpts) (id int, err error) {
+	row := s.db.QueryRow("SELECT * FROM add_monitor($1, $2, $3, $4, $5, $6)",
 		opts.Hostname, opts.Interval, opts.Protocol, opts.Addr, opts.Port, pq.Array(opts.Tags))
 
-	return err
+	err = row.Scan(&id)
+
+	return id, err
 }
 
 func (s *MonitorStore) GetMonitor(id int) (store.Monitor, error) {

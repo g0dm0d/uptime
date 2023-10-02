@@ -46,18 +46,22 @@ CREATE TABLE IF NOT EXISTS
     tags TEXT[] DEFAULT NULL
   );
 
-CREATE
-OR REPLACE PROCEDURE add_monitor (
+CREATE OR REPLACE FUNCTION add_monitor (
   v_hostname VARCHAR(50),
   v_interval INT,
   v_protocol VARCHAR(10),
   v_addr VARCHAR(50),
   v_port INT,
   v_tags TEXT[]
-) LANGUAGE plpgsql AS $$
+) RETURNS INT LANGUAGE plpgsql AS $$
+DECLARE
+    monitor_id INT;
 BEGIN
     INSERT INTO monitors(hostname, interval, protocol, addr, port, tags)
-    VALUES(v_hostname, v_interval, v_protocol, v_addr, v_port, v_tags);
+    VALUES(v_hostname, v_interval, v_protocol, v_addr, v_port, v_tags)
+    RETURNING id INTO monitor_id;
+    
+    RETURN monitor_id;
 END;
 $$;
 

@@ -37,7 +37,7 @@ type CreateMonitorOpts struct {
 }
 
 type MonitorStore interface {
-	AddMonitor(opts CreateMonitorOpts) error
+	AddMonitor(opts CreateMonitorOpts) (int, error)
 	GetMonitor(id int) (Monitor, error)
 	GetAllMonitor() ([]Monitor, error)
 }

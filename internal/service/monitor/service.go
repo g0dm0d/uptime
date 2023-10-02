@@ -3,6 +3,7 @@ package monitor
 import (
 	"github.com/g0dm0d/uptime/internal/server/req"
 	"github.com/g0dm0d/uptime/internal/store"
+	"github.com/g0dm0d/uptime/internal/uptime"
 )
 
 type Monitor interface {
@@ -14,11 +15,13 @@ type Monitor interface {
 type Service struct {
 	monitorStore   store.MonitorStore
 	heartbeatStore store.HeartbeatStore
+	uptime         uptime.Uptime
 }
 
-func New(monitorStore store.MonitorStore, heartbeatStore store.HeartbeatStore) *Service {
+func New(ms store.MonitorStore, hs store.HeartbeatStore, u uptime.Uptime) *Service {
 	return &Service{
-		monitorStore:   monitorStore,
-		heartbeatStore: heartbeatStore,
+		monitorStore:   ms,
+		heartbeatStore: hs,
+		uptime:         u,
 	}
 }

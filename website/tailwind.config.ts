@@ -1,6 +1,7 @@
 import { join } from 'path'
 import type { Config } from 'tailwindcss'
 import { skeleton } from '@skeletonlabs/tw-plugin'
+import { mainTheme } from './theme'
 
 export default {
 	darkMode: 'class',
@@ -11,12 +12,9 @@ export default {
 	plugins: [
 		skeleton({
 			themes: {
-				preset: [
-					{
-						name: 'wintry',
-						enhancements: true,
-					},
-				],
+				custom: [
+					mainTheme
+				]
 			},
 		}),
 	],

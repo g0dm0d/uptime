@@ -66,6 +66,7 @@ func main() {
 		MonitorStore:   monitorStore,
 		HeartbeatStore: &hertbeatStore,
 		JWT:            *jwt,
+		Uptime:         *u,
 	})
 
 	server := server.NewServer(&server.Config{
