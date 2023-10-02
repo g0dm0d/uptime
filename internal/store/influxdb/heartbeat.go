@@ -40,13 +40,13 @@ func (s *HeartbeatStore) SaveTick(opts store.Tick) error {
 	return nil
 }
 
-func (s *HeartbeatStore) GetTickHistory(monitorID, count int) ([]store.Heartbeat, error) {
+func (s *HeartbeatStore) GetTickHistory(monitorID string, count int) ([]store.Heartbeat, error) {
 	ticks := []store.Heartbeat{}
 
 	query := fmt.Sprintf(`from(bucket: "uptime")
 						|> range(start: 0)
 						|> sort(columns: ["_time"], desc: true)
-            |> filter(fn: (r) => r["_measurement"] == "%d")
+            |> filter(fn: (r) => r["_measurement"] == "%s")
     				|> filter(fn: (r) => r["_field"] == "result")
     				|> limit(n:%d, offset: 0)`, monitorID, count)
 

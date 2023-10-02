@@ -1,8 +1,6 @@
 package monitor
 
 import (
-	"strconv"
-
 	"github.com/g0dm0d/uptime/dto"
 	"github.com/g0dm0d/uptime/internal/server/req"
 	"github.com/g0dm0d/uptime/model"
@@ -15,10 +13,10 @@ type HistoryResp struct {
 
 func (s *Service) GetHistory(ctx *req.Ctx) error {
 	monitor := chi.URLParam(ctx.Request, "monitor")
-	i, err := strconv.Atoi(monitor)
+
+	data, err := s.heartbeatStore.GetTickHistory(monitor, 20)
 	if err != nil {
-		return errs.ReturnError(ctx.Writer, errs.InvalidUrlParam)
+		return errs.ReturnError(ctx.Writer, errs.InternalServerError)
 	}
-	data, err := s.heartbeatStore.GetTickHistory(i, 20)
 	return ctx.JSON(dto.NewHeartbeats(model.NewHeartbeats(data)))
 }

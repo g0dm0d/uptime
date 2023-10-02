@@ -1,0 +1,37 @@
+[tcp]
+    [tcp.server1]
+    name="tcp server"
+    protocol="tcp"
+    addr="127.0.0.1"
+    port=2000
+    interval=20
+
+    [tcp.server2]
+    name="postgresql"
+    protocol="tcp"
+    addr="127.0.0.1"
+    port=5432
+    interval=20
+
+[http]
+    [http.server3]
+    name="google"
+    protocol="https"
+    addr="google.com"
+    interval=20
+    method="GET"
+    headers="{\"some\":\"header\"}"
+    authorization="Bearer secret"
+    body=""
+    status=200
+
+    [http.server4]
+    name="http server"
+    protocol="http"
+    addr="127.0.0.1:3000"
+    interval=20
+    method="POST"
+    headers="{\"some\":\"header\"}"
+    authorization="Bearer secret"
+    body="{\"msg\":\"hello\"}"
+    status=200

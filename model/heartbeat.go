@@ -7,7 +7,7 @@ import (
 )
 
 type Heartbeat struct {
-	MonitorID int
+	MonitorID string
 	Success   int
 	Ping      int
 	Msg       string

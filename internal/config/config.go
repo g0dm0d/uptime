@@ -1,11 +1,12 @@
 package config
 
 import (
-	"log"
 	"os"
 	"strconv"
 	"strings"
 
+	"github.com/BurntSushi/toml"
+	"github.com/g0dm0d/uptime/internal/store"
 	"github.com/joho/godotenv"
 )
 
@@ -31,16 +32,24 @@ type PostgresDB struct {
 }
 
 type Config struct {
-	App        App
-	InfluxDB   InfluxDB
-	PostgresDB PostgresDB
+	App      App
+	InfluxDB InfluxDB
+	Uptime   store.UptimeConfig
 }
 
 // New returns a new Config struct
-func New() *Config {
+func New() (*Config, error) {
 	if err := godotenv.Load(); err != nil {
-		log.Print("No .env file found")
+		return nil, err
 	}
+
+	var UptimeCfg store.UptimeConfig
+	dat, err := os.ReadFile("./uptime.toml")
+	if err != nil {
+		return nil, err
+	}
+	err = toml.Unmarshal(dat, &UptimeCfg)
+
 	return &Config{
 		App: App{
 			Addr:    getEnv("APP_ADDR", "localhost"),
@@ -55,10 +64,8 @@ func New() *Config {
 			Bucket: getEnv("INFLUXDB_BUCKET", "uptime"),
 			Token:  getEnv("INFLUXDB_ADMIN_TOKEN", "token"),
 		},
-		PostgresDB: PostgresDB{
-			DNS: getEnv("POSTGRES_DSN", "postgres://postgres:12345@localhost:5432/postgres?sslmode=disable"),
-		},
-	}
+		Uptime: UptimeCfg,
+	}, nil
 }
 
 // Simple helper function to read an environment or return a default value

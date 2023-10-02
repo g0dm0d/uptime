@@ -1,5 +1,4 @@
 <script lang="ts">
-  import type { MonitorData } from "$lib/model";
   import { WsConnect, type Tick } from "$lib";
   import Cards from "$lib/components/cards.svelte";
   import { onDestroy, onMount } from "svelte";
@@ -17,7 +16,6 @@
       const message: Tick = JSON.parse(event.data);
       const currentData = $monitorsMap; // Access the current value of the store
       const updatedData = new Map(currentData);
-      console.log(message.monitor_id);
       updatedData.get(message.monitor_id)?.ticks.shift();
       updatedData.get(message.monitor_id)?.ticks.push(message);
       monitorsMap.set(updatedData); // Update the store with the new data

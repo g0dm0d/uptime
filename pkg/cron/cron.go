@@ -7,9 +7,9 @@ import (
 )
 
 type Task struct {
-	MonitorID int
+	MonitorID string
 	Schedule  Schedule
-	Action    func(int) error
+	Action    func(string) error
 }
 
 // Schedule These are the parameters of the time when the task starts.
@@ -40,11 +40,11 @@ type Schedule struct {
 }
 
 type Cron struct {
-	tasks map[int]Task
+	tasks map[string]Task
 }
 
 func NewCron() *Cron {
-	tasks := make(map[int]Task)
+	tasks := make(map[string]Task)
 	return &Cron{
 		tasks: tasks,
 	}
@@ -60,7 +60,7 @@ func (c *Cron) Start() {
 	}
 }
 
-func (c *Cron) RunByID(id int) error {
+func (c *Cron) RunByID(id string) error {
 	if task, ok := c.tasks[id]; ok {
 		go task.Run()
 		return nil

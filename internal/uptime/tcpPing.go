@@ -1,71 +1,29 @@
 package uptime
 
 import (
-	"encoding/json"
 	"fmt"
 	"net"
 	"time"
-
-	"github.com/g0dm0d/uptime/dto"
-	"github.com/g0dm0d/uptime/internal/store"
-	"github.com/g0dm0d/uptime/model"
 )
 
-func (u *Uptime) PingTCP(monitorID int) error {
+func (u *Uptime) PingTCP(monitorID string) error {
 	start := time.Now()
 
-	monitor, err := u.monitorStore.GetMonitor(monitorID)
-	if err != nil {
-		return err
+	monitor, ok := u.monitors[monitorID]
+	if !ok {
+		return fmt.Errorf("id not found")
 	}
 
-	port, _ := monitor.Port.Value()
-	conn, err := net.DialTimeout("tcp", fmt.Sprint(monitor.Addr, ":", port), time.Duration(monitor.Interval)*time.Second)
+	conn, err := net.DialTimeout("tcp", fmt.Sprint(monitor.Addr, ":", monitor.Port), time.Duration(monitor.Interval)*time.Second)
 	if err != nil {
-		tick := store.Tick{
-			MonitorID: monitorID,
-			Success:   0,
-			Ping:      0,
-			Msg:       err.Error(),
-		}
-
-		result := dto.NewHeartbeat(model.NewHeartbeat(store.Heartbeat{
-			Date: start,
-			Tick: tick,
-		}))
-
-		resultJSON, err := json.Marshal(result)
-		if err != nil {
-			return err
-		}
-
-		u.websocket.Emit(string(resultJSON))
-
-		err = u.heartbeatStore.SaveTick(tick)
-		return err
+		tick := GenerateFailTick(monitorID, err.Error())
+		return u.SaveAndEmitTick(tick)
 	}
 	defer conn.Close()
 
 	elapsedTime := time.Since(start)
 
-	tick := store.Tick{
-		MonitorID: monitorID,
-		Success:   1,
-		Ping:      int(elapsedTime.Milliseconds()),
-	}
+	tick := GenerateSuccessTick(monitorID, "", int(elapsedTime.Milliseconds()))
 
-	result := dto.NewHeartbeat(model.NewHeartbeat(store.Heartbeat{
-		Date: start,
-		Tick: tick,
-	}))
-
-	resultJSON, err := json.Marshal(result)
-	if err != nil {
-		return err
-	}
-
-	u.websocket.Emit(string(resultJSON))
-
-	err = u.heartbeatStore.SaveTick(tick)
-	return err
+	return u.SaveAndEmitTick(tick)
 }

@@ -3,13 +3,12 @@ package dto
 import "github.com/g0dm0d/uptime/model"
 
 type Monitor struct {
-	ID       int         `json:"id"`
+	ID       string      `json:"id"`
 	Hostname string      `json:"hostname"`
 	Interval int         `json:"interval"`
 	Protocol string      `json:"protocol"`
 	Addr     string      `json:"address"`
 	Port     interface{} `json:"port"`
-	Tags     []string    `json:"tags"`
 }
 
 func NewMonitor(m model.Monitor) Monitor {
@@ -19,7 +18,6 @@ func NewMonitor(m model.Monitor) Monitor {
 		Protocol: string(m.Protocol),
 		Addr:     m.Addr,
 		Port:     m.Port,
-		Tags:     m.Tags,
 	}
 }
 

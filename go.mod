@@ -3,9 +3,11 @@ module github.com/g0dm0d/uptime
 go 1.20
 
 require (
+	github.com/BurntSushi/toml v1.3.2
 	github.com/go-chi/chi/v5 v5.0.10
 	github.com/go-chi/cors v1.2.1
 	github.com/golang-jwt/jwt/v5 v5.0.0
+	github.com/google/uuid v1.3.1
 	github.com/influxdata/influxdb-client-go/v2 v2.12.3
 	github.com/joho/godotenv v1.5.1
 	github.com/lib/pq v1.10.9

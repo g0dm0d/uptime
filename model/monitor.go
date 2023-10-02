@@ -3,35 +3,33 @@ package model
 import "github.com/g0dm0d/uptime/internal/store"
 
 type Monitor struct {
-	ID       int
+	ID       string
 	Hostname string
 	Interval int
 	Protocol string
 	Addr     string
 	Port     interface{}
-	Tags     []string
 }
 
-func NewMonitor(m store.Monitor) Monitor {
+func NewMonitor(s store.MonitorConfig) Monitor {
 	monitor := Monitor{
-		ID:       m.ID,
-		Hostname: m.Hostname,
-		Protocol: string(m.Protocol),
-		Addr:     m.Addr,
-		Port:     m.Port.Int16,
-		Tags:     m.Tags,
+		ID:       s.ID,
+		Hostname: s.Name,
+		Protocol: string(s.Protocol),
+		Addr:     s.Addr,
+		Port:     s.Port,
 	}
 
-	if !m.Port.Valid {
+	if s.Port < 1 {
 		monitor.Port = nil
 	}
 	return monitor
 }
 
-func NewMonitors(m []store.Monitor) []Monitor {
+func NewMonitors(s []store.MonitorConfig) []Monitor {
 	var monitors []Monitor
-	for i := range m {
-		monitors = append(monitors, NewMonitor(m[i]))
+	for i := range s {
+		monitors = append(monitors, NewMonitor(s[i]))
 	}
 	return monitors
 }

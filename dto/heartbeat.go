@@ -7,7 +7,7 @@ import (
 )
 
 type Heartbeat struct {
-	MonitorID int       `json:"monitor_id"`
+	MonitorID string    `json:"monitor_id"`
 	Success   int       `json:"success"`
 	Ping      int       `json:"ping"`
 	Msg       string    `json:"message"`

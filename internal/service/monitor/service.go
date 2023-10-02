@@ -7,20 +7,18 @@ import (
 )
 
 type Monitor interface {
-	Add(ctx *req.Ctx) error
+	// Add(ctx *req.Ctx) error
 	GetAll(ctx *req.Ctx) error
 	GetHistory(ctx *req.Ctx) error
 }
 
 type Service struct {
-	monitorStore   store.MonitorStore
 	heartbeatStore store.HeartbeatStore
 	uptime         uptime.Uptime
 }
 
-func New(ms store.MonitorStore, hs store.HeartbeatStore, u uptime.Uptime) *Service {
+func New(hs store.HeartbeatStore, u uptime.Uptime) *Service {
 	return &Service{
-		monitorStore:   ms,
 		heartbeatStore: hs,
 		uptime:         u,
 	}

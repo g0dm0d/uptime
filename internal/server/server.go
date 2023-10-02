@@ -7,7 +7,6 @@ import (
 	"github.com/g0dm0d/uptime/internal/server/req"
 	"github.com/g0dm0d/uptime/internal/server/socket"
 	"github.com/g0dm0d/uptime/internal/service"
-	"github.com/g0dm0d/uptime/pkg/jwtmanager"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/cors"
 )
@@ -16,17 +15,15 @@ type Server struct {
 	server *http.Server
 	router chi.Router
 
-	jwtManager *jwtmanager.Tool
-	service    *service.Service
-	socket     *socket.Socket
+	service *service.Service
+	socket  *socket.Socket
 }
 
 type Config struct {
-	Addr       string
-	Port       int
-	JwtManager *jwtmanager.Tool
-	Service    *service.Service
-	WebSocket  *socket.Socket
+	Addr      string
+	Port      int
+	Service   *service.Service
+	WebSocket *socket.Socket
 }
 
 func NewServer(config *Config) *Server {
@@ -37,24 +34,16 @@ func NewServer(config *Config) *Server {
 		},
 		router: chi.NewRouter(),
 
-		jwtManager: config.JwtManager,
-		service:    config.Service,
-		socket:     config.WebSocket,
+		service: config.Service,
+		socket:  config.WebSocket,
 	}
 }
 
 func (s *Server) SetupRouter() {
 	s.setupCors()
 
-	// mw := middleware.New(s.service, s.jwtManager)
-
-	s.router.Route("/auth", func(r chi.Router) {
-		r.Method("POST", "/signup", req.NewHandler(s.service.User.Signup))
-		r.Method("POST", "/signin", req.NewHandler(s.service.User.Signin))
-	})
-
 	s.router.Route("/monitor", func(r chi.Router) {
-		r.Method("POST", "/add", req.NewHandler(s.service.Monitor.Add)) // Make mw.Auth
+		// r.Method("POST", "/add", req.NewHandler(s.service.Monitor.Add)) // Make mw.Auth
 		r.Method("GET", "/getall", req.NewHandler(s.service.Monitor.GetAll))
 		r.Method("GET", "/ws", req.NewHandler(s.socket.AddSubscriber))
 		r.Method("GET", "/heartbeat/{monitor}", req.NewHandler(s.service.Monitor.GetHistory))
