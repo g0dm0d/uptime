@@ -1,4 +1,7 @@
 version: '1.0'
+networks:
+  uptime:
+    driver: bridge
 
 services:
   influxdb:
@@ -12,5 +15,47 @@ services:
       - DOCKER_INFLUXDB_INIT_ORG=${INFLUXDB_ORG}
       - DOCKER_INFLUXDB_INIT_BUCKET=${INFLUXDB_BUCKET}
       - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=${INFLUXDB_ADMIN_TOKEN}
+    expose:
+      - "${INFLUXDB_PORT}"
+    networks:
+      - uptime
+
+  api:
+    container_name: uptime-api
+    build:
+      dockerfile: ./deployments/Dockerfile
+    expose:
+      - "${APP_PORT}"
+    networks:
+      - uptime
+    env_file:
+      - .env
+    configs:
+      - source: uptime
+        target: /uptime.toml
+      - source: env
+        target: /.env
+    restart: "on-failure"
+
+  web:
+    container_name: uptime-web
+    build:
+      dockerfile: ./website/Dockerfile
     ports:
-      - '8086:8086'
+      - "8080:80"
+    networks:
+      - uptime
+    depends_on:
+      - api
+    configs:
+      - source: nginx
+        target: /etc/nginx/conf.d/default.conf
+    restart: "on-failure"
+
+configs:
+  uptime:
+    file: ./uptime.toml
+  nginx:
+    file: ./configs/nginx.conf
+  env:
+    file: ./.env
