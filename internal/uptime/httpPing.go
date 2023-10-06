@@ -18,11 +18,15 @@ func (u *Uptime) PingHTTP(monitorID string) error {
 
 	var reqBodyReader io.Reader = nil
 
-	if monitor.Body != "" && monitor.Method != "GET" {
+	if monitor.Body != "" {
 		reqBodyReader = bytes.NewReader([]byte(monitor.Body))
 	}
 
 	req, err := http.NewRequest(monitor.Method, fmt.Sprintf("%s://%s", monitor.Protocol, monitor.Addr), reqBodyReader)
+	if err != nil {
+		tick := GenerateFailTick(monitorID, err.Error())
+		return u.SaveAndEmitTick(tick)
+	}
 
 	for _, header := range monitor.Headers {
 		req.Header.Add(header[0], header[1])
@@ -36,7 +40,11 @@ func (u *Uptime) PingHTTP(monitorID string) error {
 	}
 	defer resp.Body.Close()
 
-	// body, _ := io.ReadAll(resp.Body)
+	// _, err = io.ReadAll(resp.Body)
+	// if err != nil {
+	// 	return err
+	// }
+
 	if resp.StatusCode != monitor.Status {
 		tick := GenerateFailTick(monitorID, resp.Status)
 		return u.SaveAndEmitTick(tick)

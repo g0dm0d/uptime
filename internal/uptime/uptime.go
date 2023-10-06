@@ -55,6 +55,13 @@ func (u *Uptime) GetMonitorList() []model.Monitor {
 	return monitors
 }
 
+func (u *Uptime) GetMonitor(monitorID string) model.Monitor {
+	if monitor, ok := u.monitors[monitorID]; ok {
+		return model.NewMonitor(monitor)
+	}
+	return model.Monitor{}
+}
+
 func (u *Uptime) load(server store.MonitorConfig) {
 	u.cron.AddTask(cron.Task{
 		MonitorID: server.ID,

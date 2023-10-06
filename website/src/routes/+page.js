@@ -14,7 +14,7 @@ export const load = ({ params }) => {
             let monitors = res;
     
             for (const monitor of monitors) {
-                let result = await GetHeatbeat({ monitor_id: monitor.id });
+                let result = await GetHeatbeat({ monitor_id: monitor.id, count: 20, time_from: 0 });
     
                 if (result) {
                     let ticks = result;

@@ -48,7 +48,11 @@ func New() (*Config, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	err = toml.Unmarshal(dat, &UptimeCfg)
+	if err != nil {
+		return nil, err
+	}
 
 	return &Config{
 		App: App{

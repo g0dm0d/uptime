@@ -16,5 +16,5 @@ type Heartbeat struct {
 
 type HeartbeatStore interface {
 	SaveTick(Tick) error
-	GetTickHistory(monitorID string, count int) ([]Heartbeat, error)
+	GetTickHistory(monitorID string, count, timestamp int) ([]Heartbeat, error)
 }

@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { MonitorData } from "$lib/model";
+    import Infocard from "./infocard.svelte";
   import Status from "./status.svelte";
 
   export let monitorData: MonitorData;

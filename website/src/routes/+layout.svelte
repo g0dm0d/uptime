@@ -17,7 +17,7 @@
 	<svelte:fragment slot="header">
 		<AppBar>
 			<svelte:fragment slot="lead">
-				<strong class="text-xl uppercase">Uptime monitor</strong>
+				<a href="/"><strong class="text-xl uppercase">Uptime monitor</strong></a>
 			</svelte:fragment>
 			<svelte:fragment slot="trail">
 				<a

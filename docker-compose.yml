@@ -6,7 +6,7 @@ networks:
 services:
   influxdb:
     image: influxdb:2.7.1-alpine
-    container_name: influxdb
+    container_name: uptime-influxdb
     restart: on-failure
     environment:
       - DOCKER_INFLUXDB_INIT_MODE=setup

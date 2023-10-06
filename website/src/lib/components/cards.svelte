@@ -7,6 +7,8 @@
 
 {#key props}
 {#each props.entries() as [key, value]}
+  <a href="/status/{key}">
   <Card monitorData={value}/>
+  </a>
 {/each}
 {/key}

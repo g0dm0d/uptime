@@ -81,12 +81,13 @@ func (t Task) Run() {
 
 		time.Sleep(duration)
 
-		err := t.Action(t.MonitorID)
-		if err != nil {
-			log.Printf("Ping func is failed with error: %s", err)
-		}
+		go t.Action(t.MonitorID) // TODO: understand why if you run it in a non go routine, it crashes after a while.
+		// if err != nil {
+		// 	log.Printf("Ping func is failed with error: %s", err)
+		// }
 
 		nextRun = t.Schedule.getTime()
+		log.Printf("ping %s next run %v", t.MonitorID, nextRun)
 	}
 }
 

@@ -18,7 +18,7 @@ func NewHeartbeat(h model.Heartbeat) Heartbeat {
 	return Heartbeat{
 		MonitorID: h.MonitorID,
 		Success:   h.Success,
-		Ping:      h.Success,
+		Ping:      h.Ping,
 		Msg:       h.Msg,
 		Date:      h.Date,
 	}
