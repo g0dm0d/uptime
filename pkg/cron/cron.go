@@ -2,7 +2,6 @@ package cron
 
 import (
 	"fmt"
-	"log"
 	"time"
 )
 
@@ -87,7 +86,6 @@ func (t Task) Run() {
 		// }
 
 		nextRun = t.Schedule.getTime()
-		log.Printf("ping %s next run %v", t.MonitorID, nextRun)
 	}
 }
 

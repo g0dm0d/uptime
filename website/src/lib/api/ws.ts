@@ -1,6 +1,6 @@
 export function WsConnect(path: string): WebSocket {
   const url = new URL(import.meta.env.VITE_API_URL);
-  url.pathname = path;
+  url.pathname += path;
   url.protocol = "ws"
 
   let ws = new WebSocket(url);
