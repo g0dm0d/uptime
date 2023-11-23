@@ -2,10 +2,10 @@ This is a simple uptime service that can handle tcp and http
 
 ![example](./src/example.gif)
 
-# Requirements
+# Recommended requirements
 
-recommended:
 - Go version 1.20.8
+- node v18.17.1
 - npm v9.6.7
 - Docker version 20.10.25, build v20.10.25
 
